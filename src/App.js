@@ -1,30 +1,43 @@
 import React, { useState, useEffect } from 'react'
 import fetchData from './fetch/fetchData'
 
+const firstLoadOptions = {
+    usersQuantity: 6
+}
+
+const loadMoreOptions = {
+    usersQuantity: 3
+}
+
 function App() {
     const [counter, setCounter] = useState(0)
-    const [userData, setUserData] = useState({})
+    const [userData, setUserData] = useState([])
 
-    function getAndProcessData() {
-        fetchData().then(data => {
-            setUserData({
-                title: data[0].name.title,
-                firstName: data[0].name.first,
-                lastName: data[0].name.last,
-                image: data[0].picture.thumbnail
-            })
+    function getAndProcessData(options) {
+        fetchData(options).then(data => {
+            setUserData(userData.concat(data))
         })
     }
 
-    useEffect(getAndProcessData, [])
+    useEffect(() => getAndProcessData(firstLoadOptions), [])
 
     return (
         <>
-            <div className="user">
-                <pre>{ Date.now() } <br/> { JSON.stringify(userData, null, 2) }</pre>
-                <img src={userData.image} alt="" />
-                <span>{userData.title} {userData.firstName} {userData.lastName}</span>
-
+            <div className="user-list">
+                {/* <pre>{ Date.now() } <br/> { JSON.stringify(userData, null, 2) }</pre> */}
+                {
+                    userData.map(user => {
+                        const { name: {title, first, last},
+                                picture: {thumbnail} } = user
+                        return (
+                            <div className="user">
+                                <img src={thumbnail} alt="" />
+                                <span>{title} {first} {last}</span>
+                            </div>
+                        )
+                    })
+                }
+                <button onClick={() => getAndProcessData(loadMoreOptions)}>Load more users</button>
             </div>
             <hr/>
             <div className="counter">
