@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import UserList from './users/UserList'
 import fetchData from './fetch/fetchData'
 
 const firstLoadOptions = {
@@ -23,22 +24,8 @@ function App() {
 
     return (
         <>
-            <div className="user-list">
-                {/* <pre>{ Date.now() } <br/> { JSON.stringify(userData, null, 2) }</pre> */}
-                {
-                    userData.map(user => {
-                        const { name: {title, first, last},
-                                picture: {thumbnail} } = user
-                        return (
-                            <div className="user">
-                                <img src={thumbnail} alt="" />
-                                <span>{title} {first} {last}</span>
-                            </div>
-                        )
-                    })
-                }
-                <button onClick={() => getAndProcessData(loadMoreOptions)}>Load more users</button>
-            </div>
+            <UserList userList={userData} />
+            <button onClick={() => getAndProcessData(loadMoreOptions)}>Load more users</button>
             <hr/>
             <div className="counter">
                 <p>{ counter }</p>
